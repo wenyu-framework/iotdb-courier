@@ -1,0 +1,49 @@
+server:
+  port: 9982
+
+using-queue: rocketmq
+using-topic: IOT_DB_MSG_01
+
+iot-db:
+  node-url:
+    - 10.211.55.9:6667
+  username: root
+  password: root
+  base-path: root.ln.msg02
+  # 指定时间戳格式，仅当以下指定的时间戳字段对应的值为字符串时有效。如值为数字，则当作自1970-1-1T00:00:00.000的毫（纳）秒数。
+  # 年：短-06，长-2006；月：01，Jan，January; 日：02，2，_2
+  # 时：24时制-15，12时制简短-3，12时制两位-03；分：04，4；秒：05，5
+  time-parse: "MM-dd HH-mm-ss"
+  # 指定时间截所使用的key，默认为"time"
+  time-field: Time
+  # 时间序列的单位：ms / ns
+  time-unit: ns
+  # 时区，默认为东八区，Asia/Shanghai
+  time-zone: "Asia/Shanghai"
+  # 指定设备ID，#{key}语法用于从消息中提取key对应的值，默认为空，表示通过消息的KEY（RocketMQ是Tag）来确定设备ID
+  overwrite-device-id: "#{hostid}##{filename}"
+
+#rocketmq
+rocketmq:
+  name-server: 10.211.55.9:9876
+  consumer:
+    group: EMITTER_GROUP_02
+    access-key:
+    secret-key:
+
+spring:
+  kafka:
+    bootstrap-servers: 10.211.55.9:9092
+    consumer:
+      enable-auto-commit: false
+      group-id: EMITTER_GROUP_01
+      auto-offset-reset: latest
+      max-poll-records: 100
+      properties:
+        session.timeout.ms: 15000
+    listener:
+      missing-topics-fatal: false
+      type: batch
+      concurrency: 4
+      poll-timeout: 1000
+      ack-mode: manual

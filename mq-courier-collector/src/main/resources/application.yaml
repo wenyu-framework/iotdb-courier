@@ -1,0 +1,20 @@
+server:
+  port: 9981
+
+using-queue: rocketmq
+using-topic: IOT_DB_MSG_01
+
+#rocketmq
+rocketmq:
+  name-server: 10.211.55.9:9876
+  producer:
+    group: COLLECTOR_GROUP_01
+    access-key:
+    secret-key:
+
+spring:
+  kafka:
+    bootstrap-servers: 10.211.55.9:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
